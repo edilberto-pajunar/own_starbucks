@@ -7,13 +7,13 @@ part of 'drink.dart';
 // **************************************************************************
 
 Drink _$DrinkFromJson(Map<String, dynamic> json) => Drink(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  description: json['description'] as String,
-  image: json['image'] as String,
-  price: (json['price'] as num).toDouble(),
-  category: json['category'] as String,
-  calories: (json['calories'] as num).toInt(),
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  description: json['description'] as String?,
+  image: json['image'] as String?,
+  price: json['price'] as num?,
+  category: json['category'] as String?,
+  calories: (json['calories'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$DrinkToJson(Drink instance) => <String, dynamic>{

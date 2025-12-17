@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'package:drift/drift.dart';
 import 'package:own_starbucks/app/app_locator.dart';
-import 'package:own_starbucks/app/app_table.dart';
 import 'package:own_starbucks/features/customize/model/customized_drink.dart';
 
 abstract class CustomizeLocalDatabase {
@@ -18,58 +15,25 @@ class CustomizeLocalDatabaseImpl implements CustomizeLocalDatabase {
         .select(appDatabase.customizedDrinksTable)
         .get();
 
-    return drinks
-        .map(
-          (data) => CustomizedDrink(
-            id: data.id.toString(),
-            customName: data.customName,
-            baseDrink: data.baseDrink,
-            milkType: data.milkType,
-            sugarLevel: data.sugarLevel,
-            cupSize: data.cupSize,
-            extras: List<String>.from(jsonDecode(data.extras)),
-            totalPrice: data.totalPrice,
-            createdAt: data.createdAt,
-          ),
-        )
-        .toList();
+    return drinks.map((data) => CustomizedDrink.fromDrift(data)).toList();
   }
 
   @override
-  Future<int> insert(CustomizedDrink drink) async {
-    return await appDatabase
-        .into(appDatabase.customizedDrinksTable)
-        .insert(
-          CustomizedDrinksTableCompanion.insert(
-            customName: drink.customName ?? '',
-            baseDrink: drink.baseDrink ?? '',
-            milkType: drink.milkType ?? '',
-            sugarLevel: drink.sugarLevel ?? '',
-            cupSize: drink.cupSize ?? '',
-            extras: jsonEncode(drink.extras),
-            totalPrice: drink.totalPrice ?? 0.0,
-            createdAt: drink.createdAt ?? DateTime.now(),
-          ),
-        );
+  Future<void> insert(CustomizedDrink drink) async {
+    try {
+      await appDatabase
+          .into(appDatabase.customizedDrinksTable)
+          .insertOnConflictUpdate(drink.toCompanion());
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   @override
   Future<bool> update(CustomizedDrink drink) async {
-    final result =
-        await (appDatabase.update(
-          appDatabase.customizedDrinksTable,
-        )..where((tbl) => tbl.id.equals(int.parse(drink.id ?? '')))).write(
-          CustomizedDrinksTableCompanion(
-            customName: Value(drink.customName ?? ''),
-            baseDrink: Value(drink.baseDrink ?? ''),
-            milkType: Value(drink.milkType ?? ''),
-            sugarLevel: Value(drink.sugarLevel ?? ''),
-            cupSize: Value(drink.cupSize ?? ''),
-            extras: Value(jsonEncode(drink.extras)),
-            totalPrice: Value(drink.totalPrice ?? 0.0),
-            createdAt: Value(drink.createdAt ?? DateTime.now()),
-          ),
-        );
+    final result = await (appDatabase.update(
+      appDatabase.customizedDrinksTable,
+    )..where((tbl) => tbl.id.equals(drink.id ?? 0))).write(drink.toCompanion());
     return result > 0;
   }
 

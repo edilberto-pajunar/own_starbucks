@@ -2,12 +2,16 @@ import 'package:drift/drift.dart';
 
 class CustomizedDrinksTable extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get customName => text().withLength(min: 1, max: 255)();
-  TextColumn get baseDrink => text().withLength(min: 1, max: 255)();
-  TextColumn get milkType => text().withLength(min: 1, max: 255)();
-  TextColumn get sugarLevel => text().withLength(min: 1, max: 255)();
-  TextColumn get cupSize => text().withLength(min: 1, max: 255)();
-  TextColumn get extras => text().withLength(min: 1, max: 255)();
-  RealColumn get totalPrice => real()();
-  DateTimeColumn get createdAt => dateTime()();
+  TextColumn get name => text().withLength(min: 1, max: 255)();
+  TextColumn get baseDrinkName => text().named("base_drink_name")();
+  TextColumn get baseDrinkPhoto => text().named("base_drink_photo")();
+  TextColumn get milkType =>
+      text().named("milk_type").withLength(min: 1, max: 255)();
+  TextColumn get sugarLevel =>
+      text().named("sugar_level").withLength(min: 1, max: 255)();
+  TextColumn get cupSize =>
+      text().named("cup_size").withLength(min: 1, max: 255)();
+  TextColumn get extras => text()();
+  Column get totalPrice => real().named("total_price")();
+  DateTimeColumn get createdAt => dateTime().named("created_at")();
 }

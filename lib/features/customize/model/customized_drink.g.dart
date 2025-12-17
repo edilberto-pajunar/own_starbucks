@@ -8,30 +8,32 @@ part of 'customized_drink.dart';
 
 CustomizedDrink _$CustomizedDrinkFromJson(Map<String, dynamic> json) =>
     CustomizedDrink(
-      id: json['id'] as String?,
-      customName: json['customName'] as String?,
-      baseDrink: json['baseDrink'] as String?,
-      milkType: json['milkType'] as String?,
-      sugarLevel: json['sugarLevel'] as String?,
-      cupSize: json['cupSize'] as String?,
+      id: (json['id'] as num?)?.toInt(),
+      name: json['name'] as String?,
+      baseDrinkName: json['base_drink_name'] as String?,
+      baseDrinkPhoto: json['base_drink_photo'] as String?,
+      milkType: json['milk_type'] as String?,
+      sugarLevel: json['sugar_level'] as String?,
+      cupSize: json['cup_size'] as String?,
       extras: (json['extras'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      totalPrice: (json['totalPrice'] as num?)?.toDouble(),
-      createdAt: json['createdAt'] == null
+      totalPrice: json['total_price'] as num?,
+      createdAt: json['created_at'] == null
           ? null
-          : DateTime.parse(json['createdAt'] as String),
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$CustomizedDrinkToJson(CustomizedDrink instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'customName': instance.customName,
-      'baseDrink': instance.baseDrink,
-      'milkType': instance.milkType,
-      'sugarLevel': instance.sugarLevel,
-      'cupSize': instance.cupSize,
+      'name': instance.name,
+      'base_drink_name': instance.baseDrinkName,
+      'base_drink_photo': instance.baseDrinkPhoto,
+      'milk_type': instance.milkType,
+      'sugar_level': instance.sugarLevel,
+      'cup_size': instance.cupSize,
       'extras': instance.extras,
-      'totalPrice': instance.totalPrice,
-      'createdAt': instance.createdAt?.toIso8601String(),
+      'total_price': instance.totalPrice,
+      'created_at': instance.createdAt?.toIso8601String(),
     };

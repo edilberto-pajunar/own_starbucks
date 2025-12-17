@@ -33,8 +33,10 @@ class _EditCustomizeViewState extends State<EditCustomizeView> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.drink.customName);
-    _baseDrinkController = TextEditingController(text: widget.drink.baseDrink);
+    _nameController = TextEditingController(text: widget.drink.name);
+    _baseDrinkController = TextEditingController(
+      text: widget.drink.baseDrinkName,
+    );
 
     _selectedMilk = MilkType.values.firstWhere(
       (milk) => milk.label == widget.drink.milkType,

@@ -1,23 +1,38 @@
+import 'dart:convert';
+
+import 'package:drift/drift.dart' hide JsonKey;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:own_starbucks/app/app_table.dart';
 
 part 'customized_drink.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class CustomizedDrink {
-  final String? id;
-  final String? customName;
-  final String? baseDrink;
+  @JsonKey(name: 'id')
+  final int? id;
+  final String? name;
+  @JsonKey(name: 'base_drink_name')
+  final String? baseDrinkName;
+  @JsonKey(name: 'base_drink_photo')
+  final String? baseDrinkPhoto;
+  @JsonKey(name: 'milk_type')
   final String? milkType;
+  @JsonKey(name: 'sugar_level')
   final String? sugarLevel;
+  @JsonKey(name: 'cup_size')
   final String? cupSize;
+  @JsonKey(name: 'extras')
   final List<String>? extras;
-  final double? totalPrice;
+  @JsonKey(name: 'total_price')
+  final num? totalPrice;
+  @JsonKey(name: 'created_at')
   final DateTime? createdAt;
 
   CustomizedDrink({
     this.id,
-    this.customName,
-    this.baseDrink,
+    this.name,
+    this.baseDrinkName,
+    this.baseDrinkPhoto,
     this.milkType,
     this.sugarLevel,
     this.cupSize,
@@ -29,6 +44,38 @@ class CustomizedDrink {
   factory CustomizedDrink.fromJson(Map<String, dynamic> json) =>
       _$CustomizedDrinkFromJson(json);
   Map<String, dynamic> toJson() => _$CustomizedDrinkToJson(this);
+
+  // To Drift Companion (for inserting into database)
+  CustomizedDrinksTableCompanion toCompanion() {
+    return CustomizedDrinksTableCompanion(
+      id: Value(id ?? 0),
+      name: Value(name ?? ''),
+      baseDrinkName: Value(baseDrinkName ?? ''),
+      baseDrinkPhoto: Value(baseDrinkPhoto ?? ''),
+      milkType: Value(milkType ?? ''),
+      sugarLevel: Value(sugarLevel ?? ''),
+      cupSize: Value(cupSize ?? ''),
+      extras: Value(extras?.join(',') ?? ''), // Convert list to JSON string
+      totalPrice: Value((totalPrice ?? 0).toDouble()),
+      createdAt: Value(createdAt ?? DateTime.now()),
+    );
+  }
+
+  // From Drift database row
+  factory CustomizedDrink.fromDrift(CustomizedDrinksTableData data) {
+    return CustomizedDrink(
+      id: data.id,
+      name: data.name,
+      baseDrinkName: data.baseDrinkName,
+      baseDrinkPhoto: data.baseDrinkPhoto,
+      milkType: data.milkType,
+      sugarLevel: data.sugarLevel,
+      cupSize: data.cupSize,
+      extras: data.extras.split(','),
+      totalPrice: data.totalPrice,
+      createdAt: data.createdAt,
+    );
+  }
 }
 
 enum MilkType {

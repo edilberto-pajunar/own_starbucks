@@ -43,8 +43,16 @@ class _AddCustomizeViewState extends State<AddCustomizeView> {
       context.read<CustomizeBloc>().add(
         CustomizeAddRequested(
           drink: CustomizedDrink(
-            customName: _nameController.text,
-            baseDrink: _baseDrinkController.text,
+            name: _nameController.text,
+            // baseDrink: Drink(
+            //   id: '1',
+            //   name: _baseDrinkController.text,
+            //   description: '',
+            //   image: '',
+            //   price: 0,
+            //   category: '',
+            //   calories: 0,
+            // ),
             milkType: _selectedMilk.label,
             sugarLevel: _selectedSugar.label,
             cupSize: _selectedSize.label,
@@ -170,7 +178,7 @@ class _AddCustomizeViewState extends State<AddCustomizeView> {
             color: AppColor.white,
             boxShadow: [
               BoxShadow(
-                color: AppColor.black.withOpacity(0.05),
+                color: AppColor.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, -2),
               ),
@@ -187,7 +195,7 @@ class _AddCustomizeViewState extends State<AddCustomizeView> {
                       'Total Price',
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColor.black.withOpacity(0.6),
+                        color: AppColor.black.withValues(alpha: 0.6),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -337,7 +345,7 @@ class _AddCustomizeViewState extends State<AddCustomizeView> {
               }
             });
           },
-          selectedColor: AppColor.primary.withOpacity(0.2),
+          selectedColor: AppColor.primary.withValues(alpha: 0.2),
           backgroundColor: AppColor.white,
           checkmarkColor: AppColor.primary,
           labelStyle: TextStyle(
