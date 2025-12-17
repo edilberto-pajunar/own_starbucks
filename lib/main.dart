@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:own_starbucks/app/app.dart';
+import 'package:own_starbucks/bootstrap.dart';
 
 void main() {
-  runApp(App());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  bootstrap(() => App());
 }

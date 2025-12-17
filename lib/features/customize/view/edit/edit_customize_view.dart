@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:own_starbucks/features/customize/data/model/customized_drink.dart';
+import 'package:own_starbucks/features/customize/model/customized_drink.dart';
 import 'package:own_starbucks/shared/colors.dart';
 
 class EditCustomizeView extends StatefulWidget {
@@ -51,7 +51,7 @@ class _EditCustomizeViewState extends State<EditCustomizeView> {
       orElse: () => CupSize.grande,
     );
 
-    _selectedExtras = List.from(widget.drink.extras);
+    _selectedExtras = List.from(widget.drink.extras ?? []);
   }
 
   @override

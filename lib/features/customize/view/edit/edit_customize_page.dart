@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:own_starbucks/features/customize/data/model/customized_drink.dart';
+import 'package:own_starbucks/features/customize/model/customized_drink.dart';
 import 'package:own_starbucks/features/customize/view/edit/edit_customize_view.dart';
 
 class EditCustomizePage extends StatelessWidget {

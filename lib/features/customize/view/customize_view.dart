@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:own_starbucks/features/customize/data/model/customized_drink.dart';
+import 'package:go_router/go_router.dart';
+import 'package:own_starbucks/features/customize/bloc/customize_bloc.dart';
+import 'package:own_starbucks/features/customize/model/customized_drink.dart';
+import 'package:own_starbucks/features/customize/view/add/add_customize_page.dart';
 import 'package:own_starbucks/shared/colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CustomizeView extends StatelessWidget {
+class CustomizeView extends StatefulWidget {
   const CustomizeView({super.key});
+
+  @override
+  State<CustomizeView> createState() => _CustomizeViewState();
+}
+
+class _CustomizeViewState extends State<CustomizeView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<CustomizeBloc>().add(CustomizeInitRequested());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,38 +47,48 @@ class CustomizeView extends StatelessWidget {
       ),
     ];
 
-    return Scaffold(
-      backgroundColor: AppColor.cream,
-      appBar: AppBar(
-        title: const Text(
-          'My Customized Drinks',
-          style: TextStyle(color: AppColor.black, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColor.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppColor.black),
-      ),
-      body: mockCustomizedDrinks.isEmpty
-          ? _buildEmptyState(context)
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: mockCustomizedDrinks.length,
-              itemBuilder: (context, index) {
-                final drink = mockCustomizedDrinks[index];
-                return _buildCustomizedDrinkCard(context, drink);
-              },
+    return BlocBuilder<CustomizeBloc, CustomizeState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColor.cream,
+          appBar: AppBar(
+            title: const Text(
+              'My Customized Drinks',
+              style: TextStyle(
+                color: AppColor.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Navigate to add page
-        },
-        backgroundColor: AppColor.primary,
-        icon: const Icon(Icons.add, color: AppColor.white),
-        label: const Text(
-          'Create Drink',
-          style: TextStyle(color: AppColor.white, fontWeight: FontWeight.bold),
-        ),
-      ),
+            backgroundColor: AppColor.white,
+            elevation: 0,
+            iconTheme: const IconThemeData(color: AppColor.black),
+          ),
+          body: state.customizedDrinks.isEmpty
+              ? _buildEmptyState(context)
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: state.customizedDrinks.length,
+                  itemBuilder: (context, index) {
+                    final drink = state.customizedDrinks[index];
+                    return _buildCustomizedDrinkCard(context, drink);
+                  },
+                ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              context.pushNamed(AddCustomizePage.route);
+            },
+            backgroundColor: AppColor.primary,
+            icon: const Icon(Icons.add, color: AppColor.white),
+            label: const Text(
+              'Create Drink',
+              style: TextStyle(
+                color: AppColor.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -75,7 +100,7 @@ class CustomizeView extends StatelessWidget {
           Icon(
             Icons.local_cafe_outlined,
             size: 80,
-            color: AppColor.grey.withOpacity(0.5),
+            color: AppColor.grey.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -83,7 +108,7 @@ class CustomizeView extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColor.black.withOpacity(0.5),
+              color: AppColor.black.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 8),
@@ -91,7 +116,7 @@ class CustomizeView extends StatelessWidget {
             'Create your first custom drink!',
             style: TextStyle(
               fontSize: 14,
-              color: AppColor.black.withOpacity(0.4),
+              color: AppColor.black.withValues(alpha: 0.4),
             ),
           ),
         ],
@@ -108,7 +133,7 @@ class CustomizeView extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColor.grey.withOpacity(0.3)),
+        border: Border.all(color: AppColor.grey.withValues(alpha: 0.3)),
       ),
       child: InkWell(
         onTap: () {
@@ -125,7 +150,7 @@ class CustomizeView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      drink.customName,
+                      drink.customName ?? '',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -136,7 +161,7 @@ class CustomizeView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '\$${drink.totalPrice.toStringAsFixed(2)}',
+                        '\$${drink.totalPrice?.toStringAsFixed(2) ?? '0.00'}',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -154,7 +179,7 @@ class CustomizeView extends StatelessWidget {
                 'Base: ${drink.baseDrink}',
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColor.black.withOpacity(0.7),
+                  color: AppColor.black.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 8),
@@ -162,24 +187,24 @@ class CustomizeView extends StatelessWidget {
                 spacing: 6,
                 runSpacing: 6,
                 children: [
-                  _buildInfoChip(drink.cupSize),
-                  _buildInfoChip(drink.milkType),
-                  _buildInfoChip(drink.sugarLevel),
+                  _buildInfoChip(drink.cupSize ?? ''),
+                  _buildInfoChip(drink.milkType ?? ''),
+                  _buildInfoChip(drink.sugarLevel ?? ''),
                 ],
               ),
-              if (drink.extras.isNotEmpty) ...[
+              if (drink.extras?.isNotEmpty ?? false) ...[
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 4,
                   runSpacing: 4,
-                  children: drink.extras.map((extra) {
+                  children: drink.extras!.map((extra) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColor.primary.withOpacity(0.1),
+                        color: AppColor.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -207,7 +232,7 @@ class CustomizeView extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColor.cream,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: AppColor.grey.withOpacity(0.5)),
+        border: Border.all(color: AppColor.grey.withValues(alpha: 0.5)),
       ),
       child: Text(
         label,

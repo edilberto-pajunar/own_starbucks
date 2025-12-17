@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:own_starbucks/features/home/data/model/drink.dart';
 import 'package:own_starbucks/shared/colors.dart';
+import 'package:own_starbucks/shared/images.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -18,7 +19,7 @@ class HomeView extends StatelessWidget {
             backgroundColor: AppColor.white,
             elevation: 0,
             title: Image.asset(
-              'assets/images/starbucks_logo.png',
+              AppImages.cup,
               height: 40,
               errorBuilder: (context, error, stackTrace) {
                 return const Text(
@@ -110,7 +111,7 @@ class _DrinkCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.grey.withOpacity(0.3)),
+        border: Border.all(color: AppColor.grey.withValues(alpha: 0.3)),
       ),
       child: InkWell(
         onTap: () {},
@@ -120,30 +121,30 @@ class _DrinkCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  drink.image,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: AppColor.grey.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.local_cafe,
-                        size: 40,
-                        color: AppColor.primary,
-                      ),
-                    );
-                  },
-                ),
-              ),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(12),
+              //   child: Image.network(
+              //     drink.image,
+              //     width: 100,
+              //     height: 100,
+              //     fit: BoxFit.cover,
+              //     errorBuilder: (context, error, stackTrace) {
+              //       return Container(
+              //         width: 100,
+              //         height: 100,
+              //         decoration: BoxDecoration(
+              //           color: AppColor.grey.withValues(alpha: 0.3),
+              //           borderRadius: BorderRadius.circular(12),
+              //         ),
+              //         child: const Icon(
+              //           Icons.local_cafe,
+              //           size: 40,
+              //           color: AppColor.primary,
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -162,7 +163,7 @@ class _DrinkCard extends StatelessWidget {
                       drink.description,
                       style: TextStyle(
                         fontSize: 13,
-                        color: AppColor.black.withOpacity(0.6),
+                        color: AppColor.black.withValues(alpha: 0.6),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -176,7 +177,7 @@ class _DrinkCard extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColor.primary.withOpacity(0.1),
+                            color: AppColor.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -193,7 +194,7 @@ class _DrinkCard extends StatelessWidget {
                           '${drink.calories} Cal',
                           style: TextStyle(
                             fontSize: 11,
-                            color: AppColor.black.withOpacity(0.5),
+                            color: AppColor.black.withValues(alpha: 0.5),
                           ),
                         ),
                       ],

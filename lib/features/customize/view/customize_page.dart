@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:own_starbucks/app/app_locator.dart';
+import 'package:own_starbucks/features/customize/bloc/customize_bloc.dart';
 import 'package:own_starbucks/features/customize/view/customize_view.dart';
 
 class CustomizePage extends StatelessWidget {
@@ -7,6 +10,9 @@ class CustomizePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomizeView();
+    return BlocProvider.value(
+      value: getIt<CustomizeBloc>(),
+      child: CustomizeView(),
+    );
   }
 }

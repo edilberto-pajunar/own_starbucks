@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:own_starbucks/features/customize/data/model/customized_drink.dart';
+import 'package:own_starbucks/features/customize/model/customized_drink.dart';
 import 'package:own_starbucks/features/customize/view/add/add_customize_page.dart';
 import 'package:own_starbucks/features/customize/view/customize_page.dart';
 import 'package:own_starbucks/features/customize/view/edit/edit_customize_page.dart';

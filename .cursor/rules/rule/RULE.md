@@ -27,6 +27,11 @@ alwaysApply: true
 
 - Create repositories for all third-party API calls
 
+### Data Persistence
+
+- Use Drift for local storage
+- Implement offline-first architecture
+
 ### Models
 
 - When creating a model, use @json_serializable props

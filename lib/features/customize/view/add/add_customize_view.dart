@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:own_starbucks/features/customize/data/model/customized_drink.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:own_starbucks/features/customize/bloc/customize_bloc.dart';
+import 'package:own_starbucks/features/customize/model/customized_drink.dart';
 import 'package:own_starbucks/shared/colors.dart';
 
 class AddCustomizeView extends StatefulWidget {
@@ -37,13 +40,19 @@ class _AddCustomizeViewState extends State<AddCustomizeView> {
 
   void _saveCustomizedDrink() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Drink created successfully!'),
-          backgroundColor: AppColor.primary,
+      context.read<CustomizeBloc>().add(
+        CustomizeAddRequested(
+          drink: CustomizedDrink(
+            customName: _nameController.text,
+            baseDrink: _baseDrinkController.text,
+            milkType: _selectedMilk.label,
+            sugarLevel: _selectedSugar.label,
+            cupSize: _selectedSize.label,
+            extras: _selectedExtras,
+            totalPrice: _calculateTotalPrice(),
+          ),
         ),
       );
-      Navigator.pop(context);
     }
   }
 
@@ -64,138 +73,163 @@ class _AddCustomizeViewState extends State<AddCustomizeView> {
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColor.black),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionTitle('Name Your Drink'),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        hintText: 'e.g., My Special Latte',
-                        filled: true,
-                        fillColor: AppColor.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AppColor.grey),
+      body: BlocConsumer<CustomizeBloc, CustomizeState>(
+        listenWhen: (prev, curr) =>
+            prev.customizeStatus != curr.customizeStatus,
+        listener: (context, state) {
+          if (state.customizeStatus == CustomizeStatus.success) {
+            context.pop();
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle('Name Your Drink'),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            hintText: 'e.g., My Special Latte',
+                            filled: true,
+                            fillColor: AppColor.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: AppColor.grey,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a name';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    _buildSectionTitle('Base Drink'),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _baseDrinkController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: AppColor.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AppColor.grey),
+                        const SizedBox(height: 20),
+                        _buildSectionTitle('Base Drink'),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: _baseDrinkController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColor.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: AppColor.grey,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 20),
+                        _buildSectionTitle('Cup Size'),
+                        const SizedBox(height: 8),
+                        _buildCupSizeSelector(),
+                        const SizedBox(height: 20),
+                        _buildSectionTitle('Milk Type'),
+                        const SizedBox(height: 8),
+                        _buildMilkTypeSelector(),
+                        const SizedBox(height: 20),
+                        _buildSectionTitle('Sugar Level'),
+                        const SizedBox(height: 8),
+                        _buildSugarLevelSelector(),
+                        const SizedBox(height: 20),
+                        _buildSectionTitle('Extras (+\$0.50 each)'),
+                        const SizedBox(height: 8),
+                        _buildExtrasSelector(),
+                        const SizedBox(height: 100),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                    _buildSectionTitle('Cup Size'),
-                    const SizedBox(height: 8),
-                    _buildCupSizeSelector(),
-                    const SizedBox(height: 20),
-                    _buildSectionTitle('Milk Type'),
-                    const SizedBox(height: 8),
-                    _buildMilkTypeSelector(),
-                    const SizedBox(height: 20),
-                    _buildSectionTitle('Sugar Level'),
-                    const SizedBox(height: 8),
-                    _buildSugarLevelSelector(),
-                    const SizedBox(height: 20),
-                    _buildSectionTitle('Extras (+\$0.50 each)'),
-                    const SizedBox(height: 8),
-                    _buildExtrasSelector(),
-                    const SizedBox(height: 100),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          _buildBottomBar(),
-        ],
+              _buildBottomBar(),
+            ],
+          );
+        },
       ),
     );
   }
 
   Widget _buildBottomBar() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+    return BlocSelector<CustomizeBloc, CustomizeState, CustomizeStatus>(
+      selector: (state) => state.customizeStatus,
+      builder: (context, customizeStatus) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -2),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+          child: SafeArea(
+            child: Row(
               children: [
-                Text(
-                  'Total Price',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColor.black.withOpacity(0.6),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Total Price',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColor.black.withOpacity(0.6),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '\$${_calculateTotalPrice().toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '\$${_calculateTotalPrice().toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.primary,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: SizedBox(
+                    height: 50,
+                    child: customizeStatus == CustomizeStatus.loading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: _saveCustomizedDrink,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColor.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Create Drink',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _saveCustomizedDrink,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColor.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Create Drink',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
