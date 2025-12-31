@@ -10,13 +10,14 @@ class DrinkLocalRepositoryImpl implements DrinkLocalRepository {
   @override
   Future<List<Drink>> getDrinks() async {
     final drinks = await appDatabase.select(appDatabase.drinksTable).get();
-    return drinks.map((drink) => Drink.fromDrift(drink)).toList();
+    // return drinks.map((drink) => Drink.fromDrift(drink)).toList();
+    return [];
   }
 
   @override
   Future<void> insert(Drink drink) async {
-    await appDatabase
-        .into(appDatabase.drinksTable)
-        .insertOnConflictUpdate(drink.toCompanion());
+    // await appDatabase
+    //     .into(appDatabase.drinksTable)
+    //     .insertOnConflictUpdate(drink.toCompanion());
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:own_starbucks/client/model/api_endpoints.dart';
 import 'package:own_starbucks/client/model/api_exceptions.dart';
 import 'package:own_starbucks/client/model/api_interceptors.dart';
@@ -14,7 +15,7 @@ abstract class ApiClient {
         BaseOptions(
           receiveTimeout: const Duration(seconds: 30),
           connectTimeout: const Duration(seconds: 30),
-          sendTimeout: const Duration(seconds: 30),
+          sendTimeout: kIsWeb ? null : const Duration(seconds: 30),
         ),
       )..interceptors.add(ApiInterceptors());
 
@@ -73,7 +74,10 @@ abstract class ApiClient {
       }
       throw ApiExceptions.fromDioError(e);
     } catch (e) {
-      throw ApiExceptions('Unknown error occurred', statusCode: 500);
+      throw ApiExceptions(
+        'Unknown error occurred: ${e.toString()}',
+        statusCode: 500,
+      );
     }
   }
 

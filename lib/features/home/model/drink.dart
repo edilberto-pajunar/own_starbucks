@@ -1,60 +1,89 @@
-import 'package:drift/drift.dart' hide JsonKey;
+// To parse this JSON data, do
+//
+//     final drink = drinkFromJson(jsonString);
+
 import 'package:json_annotation/json_annotation.dart';
-import 'package:own_starbucks/app/app_table.dart';
+import 'dart:convert';
+
+import 'package:own_starbucks/features/home/model/ingredient.dart';
 
 part 'drink.g.dart';
 
+Drink drinkFromJson(String str) => Drink.fromJson(json.decode(str));
+
+String drinkToJson(Drink data) => json.encode(data.toJson());
+
 @JsonSerializable()
 class Drink {
-  @JsonKey(name: "id")
-  final int? id;
   @JsonKey(name: "name")
   final String? name;
-  @JsonKey(name: "description")
-  final String? description;
-  @JsonKey(name: "image")
-  final String? image;
-  @JsonKey(name: "price")
-  final num? price;
   @JsonKey(name: "category")
   final String? category;
-  @JsonKey(name: "calories")
-  final int? calories;
+  @JsonKey(name: "description")
+  final String? description;
+  @JsonKey(name: "image_url")
+  final String? imageUrl;
+  @JsonKey(name: "base_beverage")
+  final String? baseBeverage;
+  @JsonKey(name: "default_size")
+  final String? defaultSize;
+  @JsonKey(name: "default_ice_level")
+  final String? defaultIceLevel;
+  @JsonKey(name: "default_sweetness_level")
+  final int? defaultSweetnessLevel;
+  @JsonKey(name: "is_customizable")
+  final bool? isCustomizable;
+  @JsonKey(name: "id")
+  final int? id;
+  @JsonKey(name: "createdAt")
+  final DateTime? createdAt;
+  @JsonKey(name: "ingredients")
+  final List<Ingredient>? ingredients;
 
   Drink({
-    this.id,
     this.name,
-    this.description,
-    this.image,
-    this.price,
     this.category,
-    this.calories,
+    this.description,
+    this.imageUrl,
+    this.baseBeverage,
+    this.defaultSize,
+    this.defaultIceLevel,
+    this.defaultSweetnessLevel,
+    this.isCustomizable,
+    this.id,
+    this.createdAt,
+    this.ingredients,
   });
 
+  Drink copyWith({
+    String? name,
+    String? category,
+    String? description,
+    String? imageUrl,
+    String? baseBeverage,
+    String? defaultSize,
+    String? defaultIceLevel,
+    int? defaultSweetnessLevel,
+    bool? isCustomizable,
+    int? id,
+    DateTime? createdAt,
+    List<Ingredient>? ingredients,
+  }) => Drink(
+    name: name ?? this.name,
+    category: category ?? this.category,
+    description: description ?? this.description,
+    imageUrl: imageUrl ?? this.imageUrl,
+    baseBeverage: baseBeverage ?? this.baseBeverage,
+    defaultSize: defaultSize ?? this.defaultSize,
+    defaultIceLevel: defaultIceLevel ?? this.defaultIceLevel,
+    defaultSweetnessLevel: defaultSweetnessLevel ?? this.defaultSweetnessLevel,
+    isCustomizable: isCustomizable ?? this.isCustomizable,
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    ingredients: ingredients ?? this.ingredients,
+  );
+
   factory Drink.fromJson(Map<String, dynamic> json) => _$DrinkFromJson(json);
+
   Map<String, dynamic> toJson() => _$DrinkToJson(this);
-
-  DrinksTableCompanion toCompanion() {
-    return DrinksTableCompanion(
-      id: Value(id ?? 0),
-      name: Value(name ?? ''),
-      description: Value(description ?? ''),
-      image: Value(image ?? ''),
-      price: Value(price?.toDouble() ?? 0),
-      category: Value(category ?? ''),
-      calories: Value(calories ?? 0),
-    );
-  }
-
-  factory Drink.fromDrift(DrinksTableData data) {
-    return Drink(
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      image: data.image,
-      price: data.price,
-      category: data.category,
-      calories: data.calories,
-    );
-  }
 }

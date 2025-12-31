@@ -88,6 +88,11 @@ class AppTheme {
       thickness: 1,
       space: 1,
     ),
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.windows: NoTransitionsBuilder(),
+      },
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -176,5 +181,23 @@ class AppTheme {
       thickness: 1,
       space: 1,
     ),
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.windows: NoTransitionsBuilder(),
+      },
+    ),
   );
+}
+
+class NoTransitionsBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child;
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:own_starbucks/features/customize/view/customize_page.dart';
+import 'package:own_starbucks/features/custom/view/custom_page.dart';
 import 'package:own_starbucks/features/home/view/home_page.dart';
 import 'package:own_starbucks/features/layout/layout_page.dart';
 import 'package:own_starbucks/shared/colors.dart';
@@ -15,7 +15,7 @@ class LayoutView extends StatelessWidget {
     final location = GoRouterState.of(context).uri.toString();
 
     // List of exact routes where the bottom nav bar should show
-    final List<String> tabRoutes = [HomePage.route, CustomizePage.route];
+    final List<String> tabRoutes = [HomePage.route, CustomPage.route];
 
     // Show bottom nav only if we are on a tab route
     final showBottomNav = tabRoutes.contains(location);

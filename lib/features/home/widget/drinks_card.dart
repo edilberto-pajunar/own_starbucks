@@ -27,7 +27,7 @@ class DrinkCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  drink.image ?? '',
+                  drink.imageUrl ?? '',
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -93,27 +93,27 @@ class DrinkCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          '${drink.calories ?? 0} Cal',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: AppColor.black.withValues(alpha: 0.5),
-                          ),
-                        ),
+                        // Text(
+                        //   '${drink.calories ?? 0} Cal',
+                        //   style: TextStyle(
+                        //     fontSize: 11,
+                        //     color: AppColor.black.withValues(alpha: 0.5),
+                        //   ),
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          '\$${drink.price?.toStringAsFixed(2) ?? '0.00'}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.primary,
-                          ),
-                        ),
+                        // Text(
+                        //   '\$${drink.price?.toStringAsFixed(2) ?? '0.00'}',
+                        //   style: const TextStyle(
+                        //     fontSize: 20,
+                        //     fontWeight: FontWeight.bold,
+                        //     color: AppColor.primary,
+                        //   ),
+                        // ),
                         // Container(
                         //   decoration: BoxDecoration(
                         //     color: AppColor.primary,

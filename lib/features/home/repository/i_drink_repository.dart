@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:own_starbucks/features/home/data/local/data_source/drink_local_repository.dart';
 import 'package:own_starbucks/features/home/data/remote/data_source/drink_remote_repository.dart';
 import 'package:own_starbucks/features/home/model/drink.dart';
@@ -22,8 +25,20 @@ class IDrinkRepository implements DrinkRepository {
       // }
       return drinks;
     } catch (e) {
+      if (kIsWeb) {
+        rethrow;
+      }
       final drinks = await _localRepository.getDrinks();
       return drinks;
     }
+  }
+
+  @override
+  Future<void> addDrink(
+    Drink drink,
+    Uint8List imageBytes,
+    String filename,
+  ) async {
+    await _remoteRepository.addDrink(drink, imageBytes, filename);
   }
 }
