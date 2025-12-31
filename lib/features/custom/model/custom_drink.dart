@@ -1,8 +1,8 @@
-import 'dart:convert';
 
 import 'package:drift/drift.dart' hide JsonKey;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:own_starbucks/app/app_table.dart';
+import 'package:own_starbucks/features/home/model/drink.dart';
 
 part 'custom_drink.g.dart';
 
@@ -11,10 +11,8 @@ class CustomDrink {
   @JsonKey(name: 'id')
   final int? id;
   final String? name;
-  @JsonKey(name: 'base_drink_name')
-  final String? baseDrinkName;
-  @JsonKey(name: 'base_drink_photo')
-  final String? baseDrinkPhoto;
+  @JsonKey(name: 'base_drink')
+  final Drink? baseDrink;
   @JsonKey(name: 'milk_type')
   final String? milkType;
   @JsonKey(name: 'sugar_level')
@@ -31,8 +29,7 @@ class CustomDrink {
   CustomDrink({
     this.id,
     this.name,
-    this.baseDrinkName,
-    this.baseDrinkPhoto,
+    this.baseDrink,
     this.milkType,
     this.sugarLevel,
     this.cupSize,
@@ -50,8 +47,6 @@ class CustomDrink {
     return CustomDrinksTableCompanion(
       id: Value(id ?? 0),
       name: Value(name ?? ''),
-      baseDrinkName: Value(baseDrinkName ?? ''),
-      baseDrinkPhoto: Value(baseDrinkPhoto ?? ''),
       milkType: Value(milkType ?? ''),
       sugarLevel: Value(sugarLevel ?? ''),
       cupSize: Value(cupSize ?? ''),
@@ -66,8 +61,7 @@ class CustomDrink {
     return CustomDrink(
       id: data.id,
       name: data.name,
-      baseDrinkName: data.baseDrinkName,
-      baseDrinkPhoto: data.baseDrinkPhoto,
+      // baseDrink: Drink.fromJson(json.decode(data.baseDrink)),
       milkType: data.milkType,
       sugarLevel: data.sugarLevel,
       cupSize: data.cupSize,

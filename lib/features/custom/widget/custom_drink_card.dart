@@ -57,7 +57,7 @@ class CustomDrinkCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Base: ${drink.baseDrinkName}',
+                'Base: ${drink.baseDrink?.name}',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColor.black.withValues(alpha: 0.7),

@@ -9,8 +9,9 @@ part of 'custom_drink.dart';
 CustomDrink _$CustomDrinkFromJson(Map<String, dynamic> json) => CustomDrink(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
-  baseDrinkName: json['base_drink_name'] as String?,
-  baseDrinkPhoto: json['base_drink_photo'] as String?,
+  baseDrink: json['base_drink'] == null
+      ? null
+      : Drink.fromJson(json['base_drink'] as Map<String, dynamic>),
   milkType: json['milk_type'] as String?,
   sugarLevel: json['sugar_level'] as String?,
   cupSize: json['cup_size'] as String?,
@@ -25,8 +26,7 @@ Map<String, dynamic> _$CustomDrinkToJson(CustomDrink instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'base_drink_name': instance.baseDrinkName,
-      'base_drink_photo': instance.baseDrinkPhoto,
+      'base_drink': instance.baseDrink?.toJson(),
       'milk_type': instance.milkType,
       'sugar_level': instance.sugarLevel,
       'cup_size': instance.cupSize,

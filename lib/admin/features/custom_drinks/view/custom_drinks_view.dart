@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:own_starbucks/admin/features/custom_drinks/bloc/admin_custom_drinks_bloc.dart';
+import 'package:own_starbucks/admin/features/custom_drinks/utils/admin_custom_drink_dialog.dart';
 import 'package:own_starbucks/admin/features/widgets/menu_sidebar.dart';
 
 class AdminCustomDrinksView extends StatefulWidget {
@@ -20,6 +21,8 @@ class _AdminCustomDrinksViewState extends State<AdminCustomDrinksView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocBuilder<AdminCustomDrinksBloc, AdminCustomDrinksState>(
       builder: (context, state) {
         final customDrinks = state.customDrinks;
@@ -39,7 +42,9 @@ class _AdminCustomDrinksViewState extends State<AdminCustomDrinksView> {
                     ),
                   ),
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      AdminCustomDrinkDialog.showAddCustomDrinkDialog(context);
+                    },
                     icon: Icon(Icons.add),
                     label: Text('Add Custom Drink'),
                     style: ElevatedButton.styleFrom(
@@ -58,7 +63,7 @@ class _AdminCustomDrinksViewState extends State<AdminCustomDrinksView> {
                     child: SingleChildScrollView(
                       child: DataTable(
                         headingRowColor: WidgetStateProperty.all(
-                          Colors.grey[100],
+                          theme.colorScheme.primaryContainer,
                         ),
                         columns: [
                           DataColumn(
@@ -123,11 +128,11 @@ class _AdminCustomDrinksViewState extends State<AdminCustomDrinksView> {
                               DataCell(
                                 Row(
                                   children: [
-                                    if (customDrink.baseDrinkPhoto != null)
+                                    if (customDrink.baseDrink!.imageUrl != null)
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(4),
                                         child: Image.network(
-                                          customDrink.baseDrinkPhoto!,
+                                          customDrink.baseDrink!.imageUrl!,
                                           width: 40,
                                           height: 40,
                                           fit: BoxFit.cover,
@@ -144,13 +149,15 @@ class _AdminCustomDrinksViewState extends State<AdminCustomDrinksView> {
                                   ],
                                 ),
                               ),
-                              DataCell(Text(customDrink.baseDrinkName ?? '-')),
+                              DataCell(
+                                Text(customDrink.baseDrink?.name ?? '-'),
+                              ),
                               DataCell(Text(customDrink.milkType ?? '-')),
                               DataCell(Text(customDrink.sugarLevel ?? '-')),
                               DataCell(Text(customDrink.cupSize ?? '-')),
                               DataCell(
                                 Text(
-                                  '\$${customDrink.totalPrice?.toStringAsFixed(2) ?? '0.00'}',
+                                  '₱${customDrink.totalPrice?.toStringAsFixed(2) ?? '0.00'}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.green[700],

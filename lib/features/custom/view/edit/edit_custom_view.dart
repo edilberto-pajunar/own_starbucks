@@ -35,7 +35,7 @@ class _EditCustomViewState extends State<EditCustomView> {
     super.initState();
     _nameController = TextEditingController(text: widget.drink.name);
     _baseDrinkController = TextEditingController(
-      text: widget.drink.baseDrinkName,
+      text: widget.drink.baseDrink?.name,
     );
 
     _selectedMilk = MilkType.values.firstWhere(

@@ -45,7 +45,7 @@ class CustomBloc extends Bloc<CustomEvent, CustomState> {
   ) async {
     emit(state.copyWith(customizeStatus: CustomStatus.loading));
     try {
-      await _customizeRepository.addCustomDrink(event.drink);
+      // await _customizeRepository.addCustomDrink(event.drink);
       emit(
         state.copyWith(
           customizeStatus: CustomStatus.success,

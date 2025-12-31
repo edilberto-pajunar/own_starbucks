@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:own_starbucks/features/custom/model/custom_drink.dart';
@@ -14,6 +17,7 @@ class AdminCustomDrinksBloc
     : _customRepository = customRepository,
       super(AdminCustomDrinksState()) {
     on<AdminCustomDrinksInitRequested>(_onInitRequested);
+    on<AdminCustomDrinkAddRequested>(_onAddRequested);
   }
 
   void _onInitRequested(
@@ -29,6 +33,33 @@ class AdminCustomDrinksBloc
           customDrinks: customDrinks,
         ),
       );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: AdminCustomDrinksStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  void _onAddRequested(
+    AdminCustomDrinkAddRequested event,
+    Emitter<AdminCustomDrinksState> emit,
+  ) async {
+    emit(state.copyWith(status: AdminCustomDrinksStatus.loading));
+    try {
+      await _customRepository.addCustomDrink(
+        name: event.name,
+        baseDrinkId: event.baseDrinkId,
+        milkType: event.milkType,
+        sugarLevel: event.sugarLevel,
+        cupSize: event.cupSize,
+        totalPrice: event.totalPrice,
+        imageBytes: event.imageBytes,
+        filename: event.filename,
+      );
+      add(AdminCustomDrinksInitRequested());
     } catch (e) {
       emit(
         state.copyWith(

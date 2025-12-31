@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:own_starbucks/admin/features/custom_drinks/bloc/admin_custom_drinks_bloc.dart';
 import 'package:own_starbucks/admin/features/custom_drinks/view/custom_drinks_view.dart';
 import 'package:own_starbucks/admin/features/dashboard/bloc/admin_dashboard_bloc.dart';
+import 'package:own_starbucks/admin/features/drinks/bloc/admin_drinks_bloc.dart';
 import 'package:own_starbucks/app/app_locator.dart';
 
 class AdminCustomDrinksPage extends StatelessWidget {
@@ -15,6 +16,7 @@ class AdminCustomDrinksPage extends StatelessWidget {
       providers: [
         BlocProvider.value(value: getIt<AdminCustomDrinksBloc>()),
         BlocProvider.value(value: getIt<AdminDashboardBloc>()),
+        BlocProvider.value(value: getIt<AdminDrinksBloc>()),
       ],
       child: AdminCustomDrinksView(),
     );
